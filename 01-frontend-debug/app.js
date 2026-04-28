@@ -18,10 +18,10 @@ async function loadUser() {
 
   
   if (!cachedUser) {
-    cachedUser = fetchUser(userId);  
+    cachedUser = await fetchUser(userId);  // agregamos el await para esperar la respuesta de la promesa
   }
 
-    const user = await cachedUser;
+    const user = cachedUser;
  
   document.getElementById('result').innerHTML =
     `<strong>${user.name}</strong><br>${user.email}<br>${user.website}`;  
