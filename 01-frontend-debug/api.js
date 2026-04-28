@@ -5,3 +5,4 @@ async function fetchUser(id) {
   const data = response.json();                                                 
   return data;
 }
+ 
