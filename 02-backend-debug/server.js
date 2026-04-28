@@ -15,7 +15,7 @@ async function getDataFromDB() {
 app.get('/data', async (req, res) => {
   requestLog.push({ ts: Date.now() });   
 
-  const data = getDataFromDB();          
+  const data = await getDataFromDB();     //Aqui faltaba el await      
 
   if (!data) {
     res.status(200).json({ error: 'No data found' });  
