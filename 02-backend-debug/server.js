@@ -22,6 +22,8 @@ async function getDataFromDB() {
 }
 
 app.get('/data', async (req, res) => {
+  
+  try{
   requestLog.push({ ts: Date.now() });   
 
   const data = await getDataFromDB();     //Aqui faltaba el await      
@@ -30,7 +32,13 @@ app.get('/data', async (req, res) => {
     return res.status(404).json({ error: 'No data found' });  //cambiamos 200 por 404 ya que regresaba un mensaje de error
   }
 
-  res.json({ result: data });   //result no es una propiedad de data, es un nuevo objeto que estamos creando para enviar la respuesta. Por eso no se puede usar data.result
+  res.json({ result: data });
+    }
+    catch (err) {
+    // Si algo explota inesperadamente, le pasamos el error
+    // al middleware global de errores (definido al final del archivo)
+    next(err);
+   }   //result no es una propiedad de data, es un nuevo objeto que estamos creando para enviar la respuesta. Por eso no se puede usar data.result
 });
 
 
@@ -70,6 +78,23 @@ app.post('/save', (req, res, next) => {
     next(err);
   }
 });
+
+
+// ============================================================
+// FIX 6 — Middleware global de manejo de errores
+// Express reconoce este middleware por tener exactamente 4 parámetros.
+// Debe ir DESPUÉS de todos los routes, justo antes de app.listen().
+// Sin esto, cualquier excepción no capturada dejaba la request colgada
+// o hacía crashear el servidor sin darle ninguna respuesta al cliente.
+// ============================================================
+app.use((err, req, res, next) => {
+  console.error('[Error no manejado]', err.message);
+  res.status(500).json({
+    error: 'Internal Server Error',
+    detail: err.message
+  });
+});
+
 
 
 app.listen(3001, () => {
