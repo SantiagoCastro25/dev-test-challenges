@@ -18,11 +18,11 @@ app.get('/data', async (req, res) => {
   const data = await getDataFromDB();     //Aqui faltaba el await      
 
   if (!data) {
-    res.status(200).json({ error: 'No data found' });  
+    res.status(404).json({ error: 'No data found' });  //cambiamos 200 por 404 ya que regresaba un mensaje de error
     return;
   }
 
-  res.json({ result: data.result });     
+  res.json({ result: data });   //result no es una propiedad de data, es un nuevo objeto que estamos creando para enviar la respuesta. Por eso no se puede usar data.result 
 });
 
 app.post('/save', (req, res) => {
