@@ -21,10 +21,10 @@ async function getDataFromDB() {
   });
 }
 
-app.get('/data', async (req, res) => {
+app.get('/data', async (req, res, next) => {
   
   try{
-  requestLog.push({ ts: Date.now() });   
+  appendToLog({ ts: Date.now() })   
 
   const data = await getDataFromDB();     //Aqui faltaba el await      
 
