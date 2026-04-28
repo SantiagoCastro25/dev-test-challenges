@@ -23,8 +23,30 @@ async function loadUser() {
 
     const user = cachedUser;
  
-  document.getElementById('result').innerHTML =
-    `<strong>${user.name}</strong><br>${user.email}<br>${user.website}`;  
+  const result = document.getElementById('result');
+  result.innerHTML = '';  // limpia lo que había antes
+
+  // Crear el elemento <strong>
+  const name = document.createElement('strong');
+
+  name.textContent = user.name;
+  // Si user.name es un script no lo ejecuta sino lo muestra como texto plano
+
+  //agregamos el elemento al div e insertamos saltos de linea
+  result.appendChild(name);
+
+  result.appendChild(document.createElement('br'));
+
+  result.appendChild(document.createTextNode(user.email));
+
+  result.appendChild(document.createElement('br'));
+
+  result.appendChild(document.createTextNode(user.website));
+
+  // Aqui al usar InnerHTML nos exponemos a XSS ya que nos pueden llegar scripts desde la API
+
+// document.getElementById('result').innerHTML =
+//  `<strong>${user.name}</strong><br>${user.email}<br>${user.website}`;  
 }
 
 function showResult(message, isError = false) {
