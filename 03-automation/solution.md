@@ -9,3 +9,5 @@ Si los dos intentos fallan, el workflow toma la ruta de error. Capturo los datos
 Si el guardado tiene éxito, retorno un estado "saved" confirmando que el registro fue exitoso.
 
 Entonces cada resultado posible — email inválido, duplicado, guardado exitoso, o guardado fallido — tiene su propio camino explícito y su propia respuesta. Nada queda sin resolver.
+
+Usé inteligencia aritifical para crear los scripts que van para validar
