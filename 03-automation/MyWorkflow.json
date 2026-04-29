@@ -1,0 +1,496 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "devtest",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "c62ef873-f679-4197-a15a-4558dd8bd11a",
+      "name": "Webhook",
+      "webhookId": "9637ee58-b435-432f-b997-942078c18a5e"
+    },
+    {
+      "parameters": {
+        "jsCode": "const email = $input.first().json.body.email\n\nconst regex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\n\nif (!regex.test(email)) {\n  return [\n    {\n      json: {\n        status: \"invalid\",\n        message: \"Invalid email format\"\n      }\n    }\n  ];\n}\nreturn items;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "a3563f4d-e2f4-49fa-a7f6-05d48729d5b1",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "9ef002df-285d-4c95-9b8a-590b858d3d14",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "invalid",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        400,
+        48
+      ],
+      "id": "ab994c0b-7326-41f5-ad49-da99c32a4374",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1RANCJs1ub5KHZ5iKz_W8_kUbt78NahFvIuOk-5Zso2w",
+          "mode": "list",
+          "cachedResultName": "IASAVE",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RANCJs1ub5KHZ5iKz_W8_kUbt78NahFvIuOk-5Zso2w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RANCJs1ub5KHZ5iKz_W8_kUbt78NahFvIuOk-5Zso2w/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "email",
+              "lookupValue": "={{ $json.body.email }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        608,
+        144
+      ],
+      "id": "0980c7c5-f2fb-440f-9aea-23d69978c4e2",
+      "name": "Get row(s) in sheet",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xhbYlr1em15ws0KU",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const sheetsEmail   = $input.first().json.email ?? '';\nconst incomingEmail = $('Webhook').first().json.body.email ?? '';\n\nif (sheetsEmail === incomingEmail) {\n  return [{ json: { ...$input.first().json, isDuplicate: true  } }];\n} else {\n  return [{ json: { ...$input.first().json, isDuplicate: false } }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        816,
+        144
+      ],
+      "id": "b2423e52-8d8c-45fe-9060-bb329d1c68b7",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "c3f03053-7a2c-4bc6-a915-8f16df42028e",
+              "leftValue": "={{ $json.isDuplicate }}",
+              "rightValue": false,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1024,
+        144
+      ],
+      "id": "4e076a37-e273-429e-91b6-cf434e3f1d73",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1RANCJs1ub5KHZ5iKz_W8_kUbt78NahFvIuOk-5Zso2w",
+          "mode": "list",
+          "cachedResultName": "IASAVE",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RANCJs1ub5KHZ5iKz_W8_kUbt78NahFvIuOk-5Zso2w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RANCJs1ub5KHZ5iKz_W8_kUbt78NahFvIuOk-5Zso2w/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "name": "={{ $('Webhook').item.json.body.name }}",
+            "email": "={{ $('Webhook').item.json.body.email }}",
+            "source": "={{ $('Webhook').item.json.body.source }}",
+            "created_at": "={{ $now }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "source",
+              "displayName": "source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1232,
+        16
+      ],
+      "id": "248b65c5-042e-4d61-a25b-9d7fb16fbc0a",
+      "name": "Append row in sheet",
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 2000,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xhbYlr1em15ws0KU",
+          "name": "Google Sheets OAuth2 API"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nif ($('Code in JavaScript1').first().json.isDuplicate == true) {\n  return [\n    {\n      json: {\n        status: \"duplicate\",\n        message: \"Your account is already created\"\n      }\n    }\n  ];\n}\nreturn items;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1232,
+        240
+      ],
+      "id": "3c9f233a-a658-4819-bbf6-56c393d65480",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "jsCode": "if ($input.first().json.name != '') {\n  return [\n    {\n      json: {\n        status: \"saved\",\n        message: \"Your account was created Succesfully\"\n      }\n    }\n  ];\n}\nreturn items;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1472,
+        -48
+      ],
+      "id": "8ce70c51-c810-489f-ae50-dd9f8b9092f3",
+      "name": "Code in JavaScript3"
+    },
+    {
+      "parameters": {
+        "jsCode": "if ($input.first().json.name != '') {\n  return [\n    {\n      json: {\n        name: $('Code in JavaScript').first().json.body.name,\n        email: $('Code in JavaScript').first().json.body.email,\n        source: $('Code in JavaScript').first().json.body.source,\n        created_at: $now,\n        status: \"Error\",\n        message: \"Your account wasn't created\"\n      }\n    }\n  ];\n}\nreturn items;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1472,
+        112
+      ],
+      "id": "e591849b-ae94-4ed6-8724-b957bbd9156f",
+      "name": "Code in JavaScript4"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1RANCJs1ub5KHZ5iKz_W8_kUbt78NahFvIuOk-5Zso2w",
+          "mode": "list",
+          "cachedResultName": "IASAVE",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RANCJs1ub5KHZ5iKz_W8_kUbt78NahFvIuOk-5Zso2w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1134530071,
+          "mode": "list",
+          "cachedResultName": "err_log",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RANCJs1ub5KHZ5iKz_W8_kUbt78NahFvIuOk-5Zso2w/edit#gid=1134530071"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "source",
+              "displayName": "source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "error_log",
+              "displayName": "error_log",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1680,
+        112
+      ],
+      "id": "98bba0b2-0754-469b-b1a9-11b0e4ecfaf7",
+      "name": "Append row in sheet1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xhbYlr1em15ws0KU",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code in JavaScript4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript4": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "b514b107-252b-43df-8448-8fdeff0a7074",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9d1575dff92bcbdda0fa2dce885d853a78e587cf209541ecedcde486bf880d5c"
+  },
+  "id": "HQlfv7NHdKvptvep",
+  "tags": []
+}
