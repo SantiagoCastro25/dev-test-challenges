@@ -32,7 +32,7 @@ app.get('/data', async (req, res, next) => {
     return res.status(404).json({ error: 'No data found' });  //cambiamos 200 por 404 ya que regresaba un mensaje de error
   }
 
-  res.json({ result: data });
+  res.json({ result: data }); // Cambiamos data.result por result: data porque data no tiene una propiedad result; queremos enviar un nuevo objeto con la propiedad result que contenga el valor de data.
     }
     catch (err) {
     // Si algo explota inesperadamente, le pasamos el error
