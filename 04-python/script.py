@@ -1,4 +1,7 @@
 
+import re
+from collections import defaultdict
+
 users = [
     {"name": "Alice", "email": "alice@gmail.com"},
     {"name": "Bob",   "email": "bob@yahoo.com"},
@@ -7,6 +10,8 @@ users = [
     {"name": "Eve",   "email": "not-an-email"},      
     {"name": "Frank", "email": "frank@"},            
 ]
+
+EMAIL_REGEX = re.compile(r'^[\w\.\+\-]+@[\w\-]+\.[a-zA-Z]{2,}$') # Regex: local part + @ + domain with at least one dot
 
 def validate_email(email):
     
