@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Finder - Mini App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Buscador de Usuarios GitHub</h1>
+
+        <div class="search-box">
+            <input type="text" id="usernameInput" placeholder="Escribe un username...">
+            <button id="searchBtn">Buscar</button>
+        </div>
+
+        <div id="currentUser" class="card"></div>
+
+        <hr>
+
+        <h3>Historial de Búsquedas</h3>
+        <ul id="historyList"></ul>
+        <button id="clearBtn" class="secondary">Limpiar Historial</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
