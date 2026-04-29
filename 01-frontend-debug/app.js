@@ -5,7 +5,7 @@ let cachedUser = null;
 async function loadUser() {
   const userId = document.getElementById('userId').value;
 
- 
+
   if (userId === '') { //Aqui se corrige la validacion ya que no estaba haciendo una comparacion sino asignando '' a user id    
     showResult('Please enter a valid ID');
     return;

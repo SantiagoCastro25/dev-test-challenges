@@ -5,4 +5,3 @@ async function fetchUser(id) {
   const data = await response.json();// agregamos el await para esperar la respuesta de la promesa                                                 
   return data;
 }
- 
